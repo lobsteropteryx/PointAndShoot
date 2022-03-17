@@ -6,13 +6,19 @@ type Location = {
     heading: number | null
 }
 
+type Heading = {
+    accuracy: number,
+    magneticHeading: number,
+    trueHeading: number
+}
+
 async function IsAuthorized(): Promise<boolean> {
     let { status } = await ExpoLocation.requestForegroundPermissionsAsync();
     return status === 'granted';
 }
 
 async function GetLocation(): Promise<Location> {
-    const location = await ExpoLocation.getCurrentPositionAsync({});
+    const location = await ExpoLocation.getCurrentPositionAsync();
     return {
         x: location.coords.longitude,
         y: location.coords.latitude,
@@ -20,4 +26,13 @@ async function GetLocation(): Promise<Location> {
     }
 } 
 
-export {Location, IsAuthorized, GetLocation}
+async function GetHeading(): Promise<Heading> {
+    const heading = await ExpoLocation.getHeadingAsync();
+    return {
+        accuracy: heading.accuracy,
+        magneticHeading: heading.magHeading,
+        trueHeading: heading.trueHeading
+    }
+} 
+
+export {Location, Heading, IsAuthorized, GetLocation, GetHeading}
