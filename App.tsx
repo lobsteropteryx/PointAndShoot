@@ -1,30 +1,23 @@
 import { Button, Text, StyleSheet, View } from 'react-native';
-import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
+import { Location, IsAuthorized, GetLocation } from './Location';
 
 export default function App() {
-  const [location, setLocation] = useState({ coords: {} });
+  const [locationIsAuthorized, setLocationIsAuthorized] = useState(false);
+  const defaultLocation: Location = {x: 0, y: 0, heading: 0};
+  const [location, setLocation] = useState(defaultLocation);
   const [text, setText] = useState('');
-  const [waypointEnabled, setWaypointEnabled] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setText('Permission to access location was denied');
-      } else {
-        setWaypointEnabled(true);
-      }
-    })();
-  }, []);
+  useEffect( () => {
+    (async () => setLocationIsAuthorized(await IsAuthorized()))();
+  });
 
   return (
     <View style={styles.container}>
       <Text>{text}</Text>
-      <Button disabled={!waypointEnabled} title={"Capture Waypoint"} onPress={ async () => {
-         let location = await Location.getCurrentPositionAsync({});
-         setLocation(location);
-         setText( `${location.coords.latitude}, ${location.coords.longitude}, ${location.coords.heading}`) 
+      <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={ async () => {
+         setLocation(await GetLocation());     
+         setText(`${location.x}, ${location.y}, ${location.heading}`) 
       }} />
     </View>
   );
