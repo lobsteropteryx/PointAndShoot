@@ -1,6 +1,7 @@
 import { Button, Text, StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Location, Heading, IsAuthorized, GetLocation, GetHeading} from './Location';
+import { appendToFile } from './Filesystem';
 
 export default function App() {
   const [locationIsAuthorized, setLocationIsAuthorized] = useState(false);
@@ -20,7 +21,9 @@ export default function App() {
       <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={ async () => {
          setLocation(await GetLocation());     
          setHeading(await GetHeading());     
-         setText(`${location.x}, ${location.y}, ${heading.trueHeading}`) 
+         const data = `${location.x}, ${location.y}, ${heading.trueHeading}`;
+         setText(data);
+         await appendToFile(data);
       }} />
     </View>
   );
