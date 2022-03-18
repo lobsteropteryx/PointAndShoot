@@ -16,16 +16,18 @@ export default function App() {
     (async () => setLocationIsAuthorized(await IsAuthorized()))();
   });
 
+  const onPress = async () => {
+    setLocation(await GetLocation());     
+    setHeading(await GetHeading());     
+    setText(`${location.x}, ${location.y}, ${heading.trueHeading}`);
+    await appendToFile(text);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.main}>
         <Text>{text}</Text>
-        <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={ async () => {
-          setLocation(await GetLocation());     
-          setHeading(await GetHeading());     
-          setText(`${location.x}, ${location.y}, ${heading.trueHeading}`);
-          await appendToFile(text);
-        }} />
+        <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={onPress} />
       </View>
       <View style={styles.footer}>
         <Button title={"Upload Data"} onPress={ async () => await shareFile() } />
