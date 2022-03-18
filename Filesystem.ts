@@ -5,8 +5,7 @@ const fileUri = `${FileSystem.documentDirectory}PointAndShoot.csv`;
 
 async function appendToFile(data: string): Promise<void> {
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
-    let fileContents;
-    fileContents = fileInfo.exists ? 
+    let fileContents = fileInfo.exists ? 
         await FileSystem.readAsStringAsync(fileUri) : 
         "Longitude,Latitude,Heading\r\n"; 
     fileContents = fileContents + "\r\n" + data;
@@ -20,7 +19,10 @@ async function shareFile() {
 }
 
 async function deleteFile() {
-    FileSystem.deleteAsync(fileUri);
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (fileInfo.exists) {
+        await FileSystem.deleteAsync(fileUri);
+    }
 }
 
 export { appendToFile, shareFile, deleteFile };
