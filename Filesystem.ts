@@ -1,16 +1,26 @@
 import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const fileUri = `${FileSystem.documentDirectory}PointAndShoot.csv`;
 
 async function appendToFile(data: string): Promise<void> {
-    console.debug(fileUri);
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
-    let fileContents = data;
-    if (fileInfo.exists) {
-        fileContents = await FileSystem.readAsStringAsync(fileUri);
-        fileContents = fileContents + "\r\n" + data;
-    } 
-    return await FileSystem.writeAsStringAsync(fileUri, fileContents);
+    let fileContents;
+    fileContents = fileInfo.exists ? 
+        await FileSystem.readAsStringAsync(fileUri) : 
+        "Longitude,Latitude,Heading\r\n"; 
+    fileContents = fileContents + "\r\n" + data;
+    await FileSystem.writeAsStringAsync(fileUri, fileContents);
 }
 
-export { appendToFile };
+async function shareFile() {
+    if (await Sharing.isAvailableAsync()) {
+        Sharing.shareAsync(fileUri);
+    }
+}
+
+async function deleteFile() {
+    FileSystem.deleteAsync(fileUri);
+}
+
+export { appendToFile, shareFile, deleteFile };

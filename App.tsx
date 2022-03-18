@@ -1,7 +1,7 @@
 import { Button, Text, StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Location, Heading, IsAuthorized, GetLocation, GetHeading} from './Location';
-import { appendToFile } from './Filesystem';
+import { appendToFile, shareFile, deleteFile } from './Filesystem';
 
 export default function App() {
   const [locationIsAuthorized, setLocationIsAuthorized] = useState(false);
@@ -25,6 +25,8 @@ export default function App() {
          setText(data);
          await appendToFile(data);
       }} />
+      <Button title={"Upload Data"} onPress={ async () => await shareFile() } />
+      <Button title={"Reset Data"} onPress={ async () => await deleteFile() } />
     </View>
   );
 }
