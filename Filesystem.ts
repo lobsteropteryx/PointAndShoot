@@ -8,7 +8,7 @@ async function appendToFile(data: string): Promise<void> {
     let fileContents = fileInfo.exists ? 
         await FileSystem.readAsStringAsync(fileUri) : 
         "Longitude,Latitude,Heading\r\n"; 
-    fileContents = fileContents + "\r\n" + data;
+    fileContents = fileContents + data + "\r\n";
     await FileSystem.writeAsStringAsync(fileUri, fileContents);
 }
 
