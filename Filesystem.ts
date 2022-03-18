@@ -1,27 +1,16 @@
-import { StorageAccessFramework } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 
-const OUTPUT_DIRECTORY = "content://com.android.externalstorage.documents/tree/primary%3ADocuments";
+const fileUri = `${FileSystem.documentDirectory}PointAndShoot.csv`;
 
-async function createFile(): Promise<string> {
-    const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync(OUTPUT_DIRECTORY);
-    if (!permissions.granted) {
-        throw new Error("Unable to access file system");
-    }
-    console.debug(permissions.directoryUri);
-
-    const filename = "PointAndShootWaypoints";
-    return await StorageAccessFramework.createFileAsync(
-        permissions.directoryUri, 
-        filename, 
-        "text/csv"
-    );
+async function appendToFile(data: string): Promise<void> {
+    console.debug(fileUri);
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    let fileContents = data;
+    if (fileInfo.exists) {
+        fileContents = await FileSystem.readAsStringAsync(fileUri);
+        fileContents = fileContents + "\r\n" + data;
+    } 
+    return await FileSystem.writeAsStringAsync(fileUri, fileContents);
 }
 
-async function appendToFile(fileUri: string, data: string): Promise<void> {
-    StorageAccessFramework.readAsStringAsync(fileUri)
-    let fileContents = await StorageAccessFramework.readAsStringAsync(fileUri);
-    fileContents = fileContents + "\r\n" + data;
-    return await StorageAccessFramework.writeAsStringAsync(fileUri, fileContents);
-}
-
-export { createFile, appendToFile };
+export { appendToFile };
