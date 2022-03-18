@@ -23,9 +23,8 @@ export default function App() {
         <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={ async () => {
           setLocation(await GetLocation());     
           setHeading(await GetHeading());     
-          const data = `${location.x}, ${location.y}, ${heading.trueHeading}`;
-          setText(data);
-          await appendToFile(data);
+          setText(`${location.x}, ${location.y}, ${heading.trueHeading}`);
+          await appendToFile(text);
         }} />
       </View>
       <View style={styles.footer}>
