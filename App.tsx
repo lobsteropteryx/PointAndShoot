@@ -1,5 +1,6 @@
-import { Button, Text, StyleSheet, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
+import { styles } from './Styles';
 import { Location, Heading, IsAuthorized, GetLocation, GetHeading} from './Location';
 import { appendToFile, shareFile, deleteFile } from './Filesystem';
 
@@ -17,25 +18,20 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>{text}</Text>
-      <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={ async () => {
-         setLocation(await GetLocation());     
-         setHeading(await GetHeading());     
-         const data = `${location.x}, ${location.y}, ${heading.trueHeading}`;
-         setText(data);
-         await appendToFile(data);
-      }} />
-      <Button title={"Upload Data"} onPress={ async () => await shareFile() } />
-      <Button title={"Reset Data"} onPress={ async () => await deleteFile() } />
+      <View style={styles.main}>
+        <Text>{text}</Text>
+        <Button disabled={!locationIsAuthorized} title={"Capture Waypoint"} onPress={ async () => {
+          setLocation(await GetLocation());     
+          setHeading(await GetHeading());     
+          const data = `${location.x}, ${location.y}, ${heading.trueHeading}`;
+          setText(data);
+          await appendToFile(data);
+        }} />
+      </View>
+      <View style={styles.footer}>
+        <Button title={"Upload Data"} onPress={ async () => await shareFile() } />
+        <Button title={"Reset Data"} onPress={ async () => await deleteFile() } />
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
