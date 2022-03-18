@@ -3,7 +3,7 @@ import * as ExpoLocation from 'expo-location';
 type Location = {
     x: number,
     y: number,
-    heading: number | null
+    heading: number
 }
 
 type Heading = {
@@ -22,7 +22,7 @@ async function GetLocation(): Promise<Location> {
     return {
         x: location.coords.longitude,
         y: location.coords.latitude,
-        heading: location.coords.heading
+        heading: 0
     }
 } 
 
