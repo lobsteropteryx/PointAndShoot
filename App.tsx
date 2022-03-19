@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { styles } from './Styles';
 import { Location, Heading, isAuthorized, watchLocation, watchHeading} from './Location';
 import { appendToFile, shareFile, deleteFile } from './Filesystem';
-import { stopLocationUpdatesAsync } from 'expo-location';
+import { WaypointModal } from './WaypointModal';
 
 export default function App() {
   const [locationIsAuthorized, setLocationIsAuthorized] = useState<boolean>(false);
   const [location, setLocation] = useState<Location>();
   const [heading, setHeading] = useState<Heading>();
-  const [text, setText] = useState<string>('');
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [waypointName, setWaypointName] = useState<string>('');
 
   useEffect( () => {
     (async () => {
@@ -23,8 +24,14 @@ export default function App() {
     })();
   },[]);
 
-  const onPress = async () => {
-    setText(`${location?.x}, ${location?.y}, ${heading?.trueHeading}`);
+  const captureWaypoint = () => {
+    setWaypointName('');
+    setModalVisible(true);
+  }
+
+  const logWaypoint = async () => {
+    setModalVisible(false);
+    const text = `${waypointName}, ${location?.x}, ${location?.y}, ${heading?.trueHeading}`;
     await appendToFile(text);
   }
 
@@ -32,8 +39,14 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <WaypointModal 
+        isVisible={modalVisible} 
+        onSubmit={logWaypoint}
+        onWaypointNameChange={setWaypointName}
+        waypointName={waypointName}
+      />
       <View style={styles.main}>
-        <Button disabled={!waypointEnabled} title={"Capture Waypoint"} onPress={onPress} />
+        <Button disabled={!waypointEnabled} title={"Capture Waypoint"} onPress={captureWaypoint} />
         <Text style={styles.coordinateDisplay}>Heading: {heading?.trueHeading}</Text>
         <Text style={styles.coordinateDisplay}>Latitude: {location?.y}</Text>
         <Text style={styles.coordinateDisplay}>Longitude: {location?.x}</Text>

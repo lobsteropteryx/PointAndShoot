@@ -7,7 +7,7 @@ async function appendToFile(data: string): Promise<void> {
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
     let fileContents = fileInfo.exists ? 
         await FileSystem.readAsStringAsync(fileUri) : 
-        "Longitude,Latitude,Heading\r\n"; 
+        "WaypointName,Longitude,Latitude,Heading\r\n"; 
     fileContents = fileContents + data + "\r\n";
     await FileSystem.writeAsStringAsync(fileUri, fileContents);
 }
@@ -21,6 +21,7 @@ async function shareFile() {
 async function deleteFile() {
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
     if (fileInfo.exists) {
+        console.debug("Deleting file");
         await FileSystem.deleteAsync(fileUri);
     }
 }
