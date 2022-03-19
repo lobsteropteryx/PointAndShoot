@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     main: {
       flex: 0.8
     },
+    coordinateDisplay: {
+        fontSize: 32
+    },
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

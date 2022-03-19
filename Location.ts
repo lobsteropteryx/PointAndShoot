@@ -43,7 +43,7 @@ function toHeading(heading: ExpoLocation.LocationHeadingObject): Heading {
     return {
         accuracy: heading.accuracy,
         magneticHeading: heading.magHeading,
-        trueHeading: heading.trueHeading
+        trueHeading: Math.round(heading.trueHeading * 1000) / 1000
     }
 } 
 

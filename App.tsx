@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { styles } from './Styles';
 import { Location, Heading, isAuthorized, watchLocation, watchHeading} from './Location';
 import { appendToFile, shareFile, deleteFile } from './Filesystem';
+import { stopLocationUpdatesAsync } from 'expo-location';
 
 export default function App() {
   const [locationIsAuthorized, setLocationIsAuthorized] = useState<boolean>(false);
@@ -33,9 +34,9 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.main}>
         <Button disabled={!waypointEnabled} title={"Capture Waypoint"} onPress={onPress} />
-        <Text>Heading: {heading?.trueHeading}</Text>
-        <Text>Latitude: {location?.y}</Text>
-        <Text>Longitude: {location?.x}</Text>
+        <Text style={styles.coordinateDisplay}>Heading: {heading?.trueHeading}</Text>
+        <Text style={styles.coordinateDisplay}>Latitude: {location?.y}</Text>
+        <Text style={styles.coordinateDisplay}>Longitude: {location?.x}</Text>
       </View>
       <View style={styles.footer}>
         <Button title={"Upload Data"} onPress={ async () => await shareFile() } />
