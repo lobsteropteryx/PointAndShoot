@@ -35,6 +35,10 @@ export default function App() {
     await appendToFile(text);
   }
 
+  const cancelWaypoint = () => {
+    setModalVisible(false);
+  }
+
   const waypointEnabled = () => locationIsAuthorized && location && heading;
 
   return (
@@ -42,6 +46,7 @@ export default function App() {
       <WaypointModal
         isVisible={modalVisible} 
         onSubmit={logWaypoint}
+        onCancel={cancelWaypoint}
         onWaypointNameChange={setWaypointName}
         waypointName={waypointName}
       />

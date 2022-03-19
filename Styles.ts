@@ -15,10 +15,6 @@ const styles = StyleSheet.create({
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    modal: {
-        flex: 1,
-        justifyContent: 'center',
         margin: 16
     },
     input: {

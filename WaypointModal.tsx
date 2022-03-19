@@ -5,13 +5,14 @@ import { styles } from './Styles';
 type WaypointModalProps = {
   isVisible: boolean,
   onSubmit: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void,
+  onCancel: (ev: NativeSyntheticEvent<NativeTouchEvent>) => void,
   onWaypointNameChange: (text: string) => void,
   waypointName: string
 }
 
 export function WaypointModal(props: WaypointModalProps) {
   return (
-    <View style={styles.modal}>
+    <View style={styles.container}>
       <Modal
         animationType="slide"
         transparent={false}
@@ -22,7 +23,10 @@ export function WaypointModal(props: WaypointModalProps) {
             onChangeText={props.onWaypointNameChange}
             placeholder="Enter Waypoint Name"
           />
-          <Button title={'Submit'} onPress={props.onSubmit} />
+          <View style={styles.footer}>
+            <Button title={'Submit'} onPress={props.onSubmit} />
+            <Button title={'Cancel'} onPress={props.onCancel} />
+          </View>
       </Modal>
     </View>
   );
