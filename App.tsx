@@ -39,7 +39,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <WaypointModal 
+      <WaypointModal
         isVisible={modalVisible} 
         onSubmit={logWaypoint}
         onWaypointNameChange={setWaypointName}

@@ -11,12 +11,13 @@ type WaypointModalProps = {
 
 export function WaypointModal(props: WaypointModalProps) {
   return (
-    <View style={styles.container}>
+    <View style={styles.modal}>
       <Modal
         animationType="slide"
         transparent={false}
         visible={props.isVisible}>
           <TextInput
+            style={styles.input}
             value={props.waypointName}
             onChangeText={props.onWaypointNameChange}
             placeholder="Enter Waypoint Name"

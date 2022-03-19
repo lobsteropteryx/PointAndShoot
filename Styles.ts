@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      marginHorizontal: 16
+        flex: 1,
+        justifyContent: 'center',
+        marginHorizontal: 16
     },
     main: {
-      flex: 0.8
+        flex: 0.8
     },
     coordinateDisplay: {
         fontSize: 32
@@ -15,6 +15,16 @@ const styles = StyleSheet.create({
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+    modal: {
+        flex: 1,
+        justifyContent: 'center',
+        margin: 16
+    },
+    input: {
+        height: 40,
+        fontSize: 32,
+        margin: 40
     }
 });
 
