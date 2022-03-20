@@ -26,4 +26,10 @@ async function deleteFile() {
     }
 }
 
-export { appendToFile, shareFile, deleteFile };
+async function renameFile(fromUri: string, toFilename: string): Promise<string> {
+    const toPath = `${FileSystem.cacheDirectory}${toFilename}`;
+    await FileSystem.moveAsync({from: fromUri, to: toPath});
+    return toPath;
+}
+
+export { appendToFile, shareFile, deleteFile, renameFile };

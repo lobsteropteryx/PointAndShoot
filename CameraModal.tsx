@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Modal, NativeSyntheticEvent, NativeTouchEvent, Text, TouchableOpacity, View } from 'react-native';
 import { Camera as ExpoCamera } from 'expo-camera';
+import { addImageToAlbum } from './MediaLibrary';
+import { renameFile } from './Filesystem';
 import { styles } from './Styles';
 
 type CameraProps = {
@@ -20,10 +22,17 @@ function CameraModal(props: CameraProps) {
     const [cameraReady, setCameraReady] = useState<boolean>(false);
 
     const captureImage = async () => {
-      if(cameraReady) {
-        console.debug("Camera ready");
-        const image = await cameraRef?.current?.takePictureAsync();
+      if(cameraReady && cameraRef.current) {
+        const image = await cameraRef.current.takePictureAsync();
+        if (image) {
+          const imageUri = await renameFile(image.uri, `${props.waypointName}.jpg`)
+          await addImageToAlbum(imageUri);
+        } else {
+          throw new Error("Could not capture image");
+        }
         props.onSubmit();
+      } else {
+        console.debug("camera not ready");
       }
     };
 
@@ -39,7 +48,7 @@ function CameraModal(props: CameraProps) {
               type={ExpoCamera.Constants.Type.back} 
               style={styles.camera}>
               <View style={styles.footer}>
-                <TouchableOpacity onPress={captureImage}>
+                <TouchableOpacity onPress={ async () => await captureImage() }>
                   <Text style={styles.button}>Submit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={props.onCancel}>

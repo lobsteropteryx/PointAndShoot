@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { styles } from './Styles';
 import { Location, Heading, isAuthorized as checkLocationIsAuthorized, watchLocation, watchHeading} from './Location';
 import { isAuthorized as checkCameraIsAuthorized } from './CameraModal';
+import { isAuthorized as checkMediaIsAuthorized } from './MediaLibrary';
 import { appendToFile, shareFile, deleteFile } from './Filesystem';
 import { WaypointModal } from './WaypointModal';
 import { CameraModal } from './CameraModal';
@@ -10,6 +11,7 @@ import { CameraModal } from './CameraModal';
 export default function App() {
   const [locationIsAuthorized, setLocationIsAuthorized] = useState<boolean>(false);
   const [cameraIsAuthorized, setCameraIsAuthorized] = useState<boolean>(false);
+  const [mediaIsAuthorized, setMediaIsAuthorized] = useState<boolean>(false);
   const [location, setLocation] = useState<Location>();
   const [heading, setHeading] = useState<Heading>();
   const [waypointModalVisible, setWaypointModalVisible] = useState<boolean>(false);
@@ -22,6 +24,9 @@ export default function App() {
     })();
     (async () => {
       setCameraIsAuthorized(await checkCameraIsAuthorized())
+    })();
+    (async () => {
+      setMediaIsAuthorized(await checkMediaIsAuthorized())
     })();
     (async () => {
       await watchLocation(setLocation);
