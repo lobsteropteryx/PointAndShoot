@@ -20,6 +20,8 @@ export function WaypointModal(props: WaypointModalProps) {
           <TextInput
             style={styles.input}
             value={props.waypointName}
+            autoCorrect={false}
+            autoFocus={true}
             onChangeText={props.onWaypointNameChange}
             placeholder="Enter Waypoint Name"
           />
