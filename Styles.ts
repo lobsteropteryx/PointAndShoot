@@ -21,6 +21,13 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 32,
         margin: 40
+    },
+    button: {
+        color: 'white',
+        fontSize: 16
+    },
+    camera: {
+        flex: 1
     }
 });
 

@@ -1,20 +1,27 @@
-import { Button, Text, View } from 'react-native';
+import { View, Button, Text } from 'react-native';
 import { useEffect, useState } from 'react';
 import { styles } from './Styles';
-import { Location, Heading, isAuthorized, watchLocation, watchHeading} from './Location';
+import { Location, Heading, isAuthorized as checkLocationIsAuthorized, watchLocation, watchHeading} from './Location';
+import { isAuthorized as checkCameraIsAuthorized } from './CameraModal';
 import { appendToFile, shareFile, deleteFile } from './Filesystem';
 import { WaypointModal } from './WaypointModal';
+import { CameraModal } from './CameraModal';
 
 export default function App() {
   const [locationIsAuthorized, setLocationIsAuthorized] = useState<boolean>(false);
+  const [cameraIsAuthorized, setCameraIsAuthorized] = useState<boolean>(false);
   const [location, setLocation] = useState<Location>();
   const [heading, setHeading] = useState<Heading>();
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [waypointModalVisible, setWaypointModalVisible] = useState<boolean>(false);
+  const [cameraModalVisible, setCameraModalVisible] = useState<boolean>(false);
   const [waypointName, setWaypointName] = useState<string>('');
 
   useEffect( () => {
     (async () => {
-      setLocationIsAuthorized(await isAuthorized())
+      setLocationIsAuthorized(await checkLocationIsAuthorized())
+    })();
+    (async () => {
+      setCameraIsAuthorized(await checkCameraIsAuthorized())
     })();
     (async () => {
       await watchLocation(setLocation);
@@ -26,29 +33,40 @@ export default function App() {
 
   const captureWaypoint = () => {
     setWaypointName('');
-    setModalVisible(true);
+    setWaypointModalVisible(true);
   }
 
   const logWaypoint = async () => {
-    setModalVisible(false);
+    setWaypointModalVisible(false);
     const text = `${waypointName}, ${location?.x}, ${location?.y}, ${heading?.trueHeading}`;
     await appendToFile(text);
+    setCameraModalVisible(true);
   }
 
   const cancelWaypoint = () => {
-    setModalVisible(false);
+    setWaypointModalVisible(false);
   }
 
   const waypointEnabled = () => locationIsAuthorized && location && heading;
 
+  const hideCamera = () => {
+    setCameraModalVisible(false);
+  }
+
   return (
     <View style={styles.container}>
       <WaypointModal
-        isVisible={modalVisible} 
+        isVisible={waypointModalVisible} 
         onSubmit={logWaypoint}
         onCancel={cancelWaypoint}
         onWaypointNameChange={setWaypointName}
         waypointName={waypointName}
+      />
+      <CameraModal
+        isVisible={cameraModalVisible}
+        waypointName={waypointName} 
+        onSubmit={hideCamera}
+        onCancel={hideCamera}
       />
       <View style={styles.main}>
         <Button disabled={!waypointEnabled} title={"Capture Waypoint"} onPress={captureWaypoint} />
